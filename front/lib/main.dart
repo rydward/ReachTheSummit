@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/connexion.dart';
 import 'package:front/models/niveau.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'dart:convert';
@@ -29,6 +30,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      routes: {
+        '/second': (context) => LoginApp(),
+      },
     );
   }
 }
@@ -134,11 +138,16 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             for (var niveau in niveaux)
               Text(
-                niveau.nom
+                niveau.nom,
               ),
             TextButton(
               onPressed: getData,
               child: const Text('Get Data'),
+            ),TextButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginApp()));
+              },
+              child: const Text('connexion'),
             ),
           ],
         ),
