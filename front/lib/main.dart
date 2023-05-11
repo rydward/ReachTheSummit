@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> {
     final pb = PocketBase('http://127.0.0.1:8090');
 
     final records = await pb.collection('niveau').getFullList(
-      sort: '-created',
+      sort: 'created',
     );
 
     for (var record in records) {
@@ -132,10 +132,10 @@ class _MyHomePageState extends State<MyHomePage> {
             const Text(
               'You have pushed the button this many times:',
             ),
-            Text(
-              '$niveaux',
-              style: Theme.of(context).textTheme.headline4,
-            ),
+            for (var niveau in niveaux)
+              Text(
+                niveau.nom
+              ),
             TextButton(
               onPressed: getData,
               child: const Text('Get Data'),
