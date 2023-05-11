@@ -26,7 +26,7 @@ class _LoginPageState extends State<LoginPage> {
   String _password = '';
 
   @override
-Widget build(BuildContext context) {
+  Widget build(BuildContext context) {
     final Size screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -36,41 +36,48 @@ Widget build(BuildContext context) {
         decoration: BoxDecoration(
           image: DecorationImage(
             image: AssetImage('assets/images/Image6.png'),
+            colorFilter: ColorFilter.mode(
+              Colors.black.withOpacity(0.75),
+              BlendMode.dstATop,
+            ),
             fit: BoxFit.cover,
           ),
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/Pngwing1.png',
-                height: screenSize.height * 0.3,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(height: screenSize.height * 0.1),
+            Image.asset(
+              'assets/images/Pngwing1.png',
+              height: screenSize.height * 0.4,
+            ),
+            Spacer(),
+            ElevatedButton(
+              onPressed: () {
+                // Add your logic for "Se connecter" button
+              },
+              child: Text('Se connecter'),
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFF70C9DE),
+                onPrimary: Colors.white,
+                minimumSize: Size(screenSize.width * 0.6, 50),
               ),
-              SizedBox(height: screenSize.height * 0.05),
-              ElevatedButton(
-                onPressed: () {
-                  // Add your logic for "Se connecter" button
-                },
-                child: Text('Se connecter'),
-                style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF70C9DE),
-                  onPrimary: Colors.white,
-                ),
+            ),
+            SizedBox(height: screenSize.height * 0.02),
+            ElevatedButton(
+              onPressed: () {
+                // Add your logic for "S'inscrire" button
+              },
+              child: Text("S'inscrire"),
+              style: ElevatedButton.styleFrom(
+                primary: Color(0xFF70C9DE),
+                onPrimary: Colors.white,
+                minimumSize: Size(screenSize.width * 0.6, 50),
               ),
-              SizedBox(height: screenSize.height * 0.02),
-              ElevatedButton(
-                onPressed: () {
-                  // Add your logic for "S'inscrire" button
-                },
-                child: Text("S'inscrire"),
-                style: ElevatedButton.styleFrom(
-                  primary: Color(0xFF70C9DE),
-                  onPrimary: Colors.white,
-                ),
-              ),
-            ],
-          ),
+            ),
+            SizedBox(height: screenSize.height * 0.3),
+          ],
         ),
       ),
     );
