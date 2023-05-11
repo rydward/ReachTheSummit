@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:front/models/niveau.dart';
 import 'package:pocketbase/pocketbase.dart';
+import 'dart:convert';
+
 
 void main() {
   runApp(const MyApp());
@@ -50,14 +53,35 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   int _counter = 0;
-  final pb = PocketBase('http://127.0.0.1:8090');
 
+  List<Niveau> niveaux = [];
 
   void getData() async {
-    final result = await pb.collection('niveau').getList(
+    setState(() {
+      niveaux = [];
+    });
+    final pb = PocketBase('http://127.0.0.1:8090');
+
+    final records = await pb.collection('niveau').getFullList(
+      sort: '-created',
     );
-    print("resultat de la requete : ");
-    print(result.items);
+
+    for (var record in records) {
+        niveaux.add(Niveau(
+          record.id,
+          record.data['nom'],
+          record.created,
+          record.updated,
+        ));
+    }
+
+    for (var niveau in niveaux) {
+      print(niveau.id + " " + niveau.nom + " " + niveau.created + " " + niveau.updated);
+    }
+
+    setState(() {
+      niveaux = niveaux;
+    });
   }
 
   void _incrementCounter() {
@@ -109,14 +133,20 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_counter',
+              '$niveaux',
               style: Theme.of(context).textTheme.headline4,
+            ),
+            TextButton(
+              onPressed: getData,
+              child: const Text('Get Data'),
             ),
           ],
         ),
+        //show niveaux
+        
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: getData,
+        onPressed: _incrementCounter,
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
