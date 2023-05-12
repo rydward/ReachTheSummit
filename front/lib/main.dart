@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:front/models/niveau.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'dart:convert';
-
-
 void main() {
   runApp(const MyApp());
 }
@@ -131,6 +129,10 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             const Text(
               'You have pushed the button this many times:',
+            ),
+            Text(
+              '$_counter',
+              style: Theme.of(context).textTheme.headline4,
             ),
             for (var niveau in niveaux)
               Text(
