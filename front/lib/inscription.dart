@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:front/accueil.dart';
+import 'package:front/connexion.dart';
 import 'package:front/db/db.dart';
-import 'package:front/inscription.dart';
+import 'package:pocketbase/pocketbase.dart';
 
-void main() => runApp(ConnexionApp());
+void main() => runApp(InscriptionApp());
 
-class ConnexionApp extends StatelessWidget {
+class InscriptionApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -13,41 +13,33 @@ class ConnexionApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ConnexionPage(),
+      home: InscriptionPage(),
     );
   }
 }
 
-class ConnexionPage extends StatefulWidget {
+class InscriptionPage extends StatefulWidget {
   @override
-  _ConnexionPageState createState() => _ConnexionPageState();
+  _InscriptionPageState createState() => _InscriptionPageState();
 }
 
-class _ConnexionPageState extends State<ConnexionPage> {
+class _InscriptionPageState extends State<InscriptionPage> {
   final _formKey = GlobalKey<FormState>();
   String _pseudo = '';
+  String _email = '';
   String _password = '';
   String error = '';
 
-  void _disconnect() async {
-    Database().disconnect();
-  }
-
-  void _checkConnexion() async {
-    var isConnected = Database().checkConnexion();
-    print(isConnected);
-  }
-
-  void _connectUser() async {
-    var result = await Database().connectUser(_pseudo, _password);
+  void _createUser() async {
+    var result = await Database().createUser(_pseudo, _email, _password);
     if (result == true) {
-      Navigator.push(context, MaterialPageRoute(builder: (context) => AccueilPage()));
+      Navigator.push(context, MaterialPageRoute(builder: (context) => ConnexionPage()));
     } else {
       setState(() {
-        error = "Pseudo ou mot de passe incorrect";
+        error = result;
       });
     }
-  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -88,19 +80,38 @@ class _ConnexionPageState extends State<ConnexionPage> {
                   children: [
                     TextFormField(
                       decoration: InputDecoration(
-                        labelText: 'Pseudo ou email',
+                        labelText: 'Pseudo',
                         filled: true,
                         fillColor: Colors.white,
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Veuillez entrer un pseudo ou un email';
+                          return 'Veuillez entrer un pseudo';
                         }
                         return null;
                       },
                       onChanged: (value) {
                         setState(() {
                           _pseudo = value;
+                        });
+                      },
+                    ),
+                    SizedBox(height: screenSize.height * 0.02),
+                    TextFormField(
+                      decoration: InputDecoration(
+                        labelText: 'Email',
+                        filled: true,
+                        fillColor: Colors.white,
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Veuillez entrer un email';
+                        }
+                        return null;
+                      },
+                      onChanged: (value) {
+                        setState(() {
+                          _email = value;
                         });
                       },
                     ),
@@ -133,7 +144,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
                     SizedBox(height: screenSize.height * 0.02),
                     TextButton(
                       onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => InscriptionPage()));
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => ConnexionPage()));
                       },
                       child: Text(
                         'J\'ai déjà un compte',
@@ -145,33 +156,10 @@ class _ConnexionPageState extends State<ConnexionPage> {
                     ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          _connectUser();
+                          _createUser();
                         }
                       },
-                      child: Text('Se connecter'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => InscriptionPage()));
-                      },
-                      child: Text(
-                        'J\'ai oublié mon mot de passe',
-                        style: TextStyle(
-                          color: Colors.black,
-                      ),
-                    ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _checkConnexion();
-                      },
-                      child: Text('Check connexion'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _disconnect();
-                      },
-                      child: Text('Disconnect'),
+                      child: Text('S\'inscrire'),
                     ),
                   ],
                 ),

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:front/connexion.dart';
+import 'package:front/home.dart';
 import 'package:front/models/niveau.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'dart:convert';
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
       routes: {
-        '/second': (context) => LoginApp(),
+        '/second': (context) => HomeApp(),
       },
     );
   }
@@ -147,7 +147,7 @@ class _MyHomePageState extends State<MyHomePage> {
               child: const Text('Get Data'),
             ),TextButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) => LoginApp()));
+                Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp()));
               },
               child: const Text('connexion'),
             ),
