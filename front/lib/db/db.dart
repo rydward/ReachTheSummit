@@ -1,4 +1,5 @@
 import 'package:front/models/actualite.dart';
+import 'package:front/models/guide.dart';
 import 'package:front/models/users.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:collection/collection.dart';
@@ -95,14 +96,35 @@ class Database{
     return actualites;
   }
 
+  Future<List<Guide>> getGuides() async {
+    List<Guide> guides = [];
+
+    final records = await pb.collection('guide').getFullList(
+      sort: '-created',
+    );
+
+    for (var record in records) {
+        guides.add(Guide(
+          record.id,
+          record.data['titre'],
+          record.data['texte'],
+          await getUserById(record.data['createur'].toString()),
+          record.created,
+          record.updated,
+        ));
+    }
+
+    return guides;
+  }
+
   Future<Users> getUserById(String id) async {
-    final record = await pb.collection('users').getOne('zfukn52ful8b4n8', expand: 'id');
+    final record = await pb.collection('users').getOne(id, expand: 'id');
     
     final user = Users(
       record.id,
       record.data['username'].toString(),
       record.data['email'].toString(),
-      record.data['emailVisibility'].toString(),
+      record.data['avatar'].toString(),
       record.data['role'].toString(),
       record.created,
       record.updated,
@@ -110,5 +132,6 @@ class Database{
 
     return user;
   }
+  
 
 }

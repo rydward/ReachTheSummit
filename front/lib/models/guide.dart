@@ -4,7 +4,7 @@ class Guide{
   String id;
   String titre;
   String texte;
-  Users utilisateur;
+  Users createur;
   String created;
   String updated;
 
@@ -12,7 +12,7 @@ class Guide{
     this.id,
     this.titre,
     this.texte,
-    this.utilisateur,
+    this.createur,
     this.created,
     this.updated,
   );

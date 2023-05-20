@@ -31,7 +31,6 @@ class _AccueilPageState extends State<AccueilPage> {
   void initState() {
     super.initState();
     _fetchActualites();
-    _getUser();
   }
 
   Future<void> _fetchActualites() async {
@@ -40,12 +39,6 @@ class _AccueilPageState extends State<AccueilPage> {
     setState(() {
       actualites = fetchedActualites;
     });
-  }
-
-  Future<void> _getUser() async {
-    var fetchedUser = await Database().getUserById('zfukn52ful8b4n8');
-
-    print(fetchedUser.username);
   }
 
   @override
@@ -73,6 +66,14 @@ class _AccueilPageState extends State<AccueilPage> {
               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
               color: Colors.white,
               child: ListTile(
+                leading: CircleAvatar(
+                  radius: 20,  // Reduce the size of the avatar
+                  backgroundImage: NetworkImage(
+                    actualite.createur.avatar.isEmpty
+                        ? 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
+                        : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/kqtl5vuixxmfxqo/${actualite.createur.avatar}',
+                  ),
+                ),
                 title: Text(
                   actualite.titre,
                   style: TextStyle(
@@ -93,26 +94,22 @@ class _AccueilPageState extends State<AccueilPage> {
                     ),
                     SizedBox(height: 4),
                     Text(
-                      'Publié le : ${actualite.created}',
+                      'Publié le: ${actualite.created}',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
                       ),
                     ),
-    ],
-  ),
-  trailing: Text(
-    actualite.createur.username,
-    style: TextStyle(
-      fontSize: 12,
-      color: Colors.black,
-    ),
-  ),
-  onTap: () {
-    // Handle tap on actualite
-  },
-),
-
+                  ],
+                ),
+                trailing: Text(
+                  actualite.createur.username,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
             );
           },
         ),
