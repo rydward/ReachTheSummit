@@ -1,8 +1,10 @@
+import 'package:front/models/users.dart';
+
 class Actualite{
   String id;
   String titre;
   String texte;
-  String createur;
+  Users createur;
   String created;
   String updated;
 

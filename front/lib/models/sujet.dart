@@ -1,9 +1,12 @@
+import 'package:front/models/commentaire.dart';
+import 'package:front/models/users.dart';
+
 class Sujet{
   String id;
   String titre;
   String texte;
-  String utilisateur;
-  String commentaire;
+  Users utilisateur;
+  Commentaire commentaire;
   String created;
   String updated;
 

@@ -1,5 +1,7 @@
 import 'package:front/models/actualite.dart';
+import 'package:front/models/users.dart';
 import 'package:pocketbase/pocketbase.dart';
+import 'package:collection/collection.dart';
 
 class Database{
   static final Database _instance = Database._internal();
@@ -84,13 +86,29 @@ class Database{
           record.id,
           record.data['titre'],
           record.data['texte'],
-          record.data['createur'],
+          await getUserById(record.data['createur'].toString()),
           record.created,
           record.updated,
         ));
     }
 
     return actualites;
+  }
+
+  Future<Users> getUserById(String id) async {
+    final record = await pb.collection('users').getOne('zfukn52ful8b4n8', expand: 'id');
+    
+    final user = Users(
+      record.id,
+      record.data['username'].toString(),
+      record.data['email'].toString(),
+      record.data['emailVisibility'].toString(),
+      record.data['role'].toString(),
+      record.created,
+      record.updated,
+    );
+
+    return user;
   }
 
 }

@@ -31,6 +31,7 @@ class _AccueilPageState extends State<AccueilPage> {
   void initState() {
     super.initState();
     _fetchActualites();
+    _getUser();
   }
 
   Future<void> _fetchActualites() async {
@@ -39,6 +40,12 @@ class _AccueilPageState extends State<AccueilPage> {
     setState(() {
       actualites = fetchedActualites;
     });
+  }
+
+  Future<void> _getUser() async {
+    var fetchedUser = await Database().getUserById('zfukn52ful8b4n8');
+
+    print(fetchedUser.username);
   }
 
   @override
@@ -95,7 +102,7 @@ class _AccueilPageState extends State<AccueilPage> {
     ],
   ),
   trailing: Text(
-    actualite.createur,
+    actualite.createur.username,
     style: TextStyle(
       fontSize: 12,
       color: Colors.black,

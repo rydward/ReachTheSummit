@@ -1,8 +1,10 @@
+import 'package:front/models/users.dart';
+
 class Guide{
   String id;
   String titre;
   String texte;
-  String utilisateur;
+  Users utilisateur;
   String created;
   String updated;
 

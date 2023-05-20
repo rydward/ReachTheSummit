@@ -1,10 +1,14 @@
+import 'package:front/models/niveau.dart';
+import 'package:front/models/reponse.dart';
+import 'package:front/models/users.dart';
+
 class Aide{
   String id;
   String type;
   String titre;
-  String niveau;
-  String utilisateur;
-  String reponses;
+  Niveau niveau;
+  Users utilisateur;
+  Reponse reponses;
   String created;
   String updated;
 

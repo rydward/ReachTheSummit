@@ -1,7 +1,9 @@
+import 'package:front/models/users.dart';
+
 class Reponse{
   String id;
   String texte;
-  String utilisateur;
+  Users utilisateur;
   String created;
   String updated;
 
