@@ -117,6 +117,21 @@ class Database{
     return guides;
   }
 
+  Future<Guide> getGuideById(String id) async {
+    final record = await pb.collection('guide').getOne(id, expand: 'id');
+    
+    final guide = Guide(
+      record.id,
+      record.data['titre'].toString(),
+      record.data['texte'].toString(),
+      await getUserById(record.data['createur'].toString()),
+      record.created,
+      record.updated,
+    );
+
+    return guide;
+  }
+
   Future<Users> getUserById(String id) async {
     final record = await pb.collection('users').getOne(id, expand: 'id');
     

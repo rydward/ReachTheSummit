@@ -6,6 +6,8 @@ import 'package:front/models/guide.dart';
 import 'package:front/share/bottom_navigation_bar_widget.dart';
 import 'package:intl/intl.dart';
 
+import 'guide.dart';
+
 void main() => runApp(GuidesApp());
 
 class GuidesApp extends StatelessWidget {
@@ -44,7 +46,10 @@ class _GuidesPageState extends State<GuidesPage> {
   }
 
   void _handleGuideTap(Guide guide) {
-    print('Guide tapped: ${guide.titre}');
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => GuidePage(guideId: guide.id)),
+      );
   }
 
   @override
