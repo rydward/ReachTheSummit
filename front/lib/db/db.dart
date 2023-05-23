@@ -54,6 +54,22 @@ class Database{
     }
   }
 
+  Future<Users> getConnectedUser() async {
+    final record = await pb.collection('users').getOne(pb.authStore.model.id, expand: 'id');
+
+    final user = Users(
+      record.id,
+      record.data['username'].toString(),
+      record.data['email'].toString(),
+      record.data['avatar'].toString(),
+      record.data['role'].toString(),
+      record.created,
+      record.updated,
+    );
+
+    return user;
+  }
+
   Future<dynamic> connectUser(String pseudo, String password) async {
     var authData;
     try {
