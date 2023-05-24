@@ -174,23 +174,20 @@ Future<List<Sujet>> getSubjects() async {
   );
 
   for (var record in records) {
-    List<String> commentaireIds = List<String>.from(record.data['commentaires']);
-    List<Commentaire> commentaires = [];
-
-    for (var commentaireId in commentaireIds) {
-      Commentaire commentaire = await getCommentById(commentaireId);
-      commentaires.add(commentaire);
-    }
-
+    print(record.id);
+    try{
     sujets.add(Sujet(
       record.id,
       record.data['titre'],
       record.data['texte'],
       await getUserById(record.data['utilisateur'].toString()),
-      commentaires,
+      await getCommentsByIdSujet(record.id),
       record.created,
       record.updated,
     ));
+    }catch(e){
+      print(e);
+    }
   }
 
   return sujets;
@@ -198,14 +195,8 @@ Future<List<Sujet>> getSubjects() async {
 
   Future<Sujet> getSujetById(String id) async {
     final record = await pb.collection('sujet').getOne(id, expand: 'id');
-  
-    List<String> commentaireIds = List<String>.from(record.data['commentaires']);
-    List<Commentaire> commentaires = [];
 
-    for (var commentaireId in commentaireIds) {
-      Commentaire commentaire = await getCommentById(commentaireId);
-      commentaires.add(commentaire);
-    }
+    List<Commentaire> commentaires = await getCommentsByIdSujet(id);
 
     Sujet sujet = Sujet(
       record.id,
@@ -220,18 +211,25 @@ Future<List<Sujet>> getSubjects() async {
     return sujet;
   }
 
-Future<Commentaire> getCommentById(String id) async {
-  final record = await pb.collection('commentaire').getOne(id, expand: 'id');
-
-  final commentaire = Commentaire(
-    record.id,
-    record.data['texte'].toString(),
-    await getUserById(record.data['utilisateur'].toString()),
-    record.created,
-    record.updated,
+Future<List<Commentaire>> getCommentsByIdSujet(String id) async {
+  final records = await pb.collection('commentaire').getFullList(
+    filter: 'sujet = "$id"',
+    sort: 'created',
   );
 
-  return commentaire;
+  List<Commentaire> commentaires = [];
+
+  for (var record in records) {
+    commentaires.add(Commentaire(
+      record.id,
+      record.data['texte'],
+      await getUserById(record.data['utilisateur'].toString()),
+      record.created,
+      record.updated,
+    ));
+  }
+
+  return commentaires;
 }
 
   
