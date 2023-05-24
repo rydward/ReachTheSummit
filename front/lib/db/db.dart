@@ -1,5 +1,7 @@
 import 'package:front/models/actualite.dart';
+import 'package:front/models/commentaire.dart';
 import 'package:front/models/guide.dart';
+import 'package:front/models/sujet.dart';
 import 'package:front/models/users.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:collection/collection.dart';
@@ -163,6 +165,75 @@ class Database{
 
     return user;
   }
+
+Future<List<Sujet>> getSubjects() async {
+  List<Sujet> sujets = [];
+
+  final records = await pb.collection('sujet').getFullList(
+    sort: '-created',
+  );
+
+  for (var record in records) {
+    List<String> commentaireIds = List<String>.from(record.data['commentaires']);
+    List<Commentaire> commentaires = [];
+
+    for (var commentaireId in commentaireIds) {
+      Commentaire commentaire = await getCommentById(commentaireId);
+      commentaires.add(commentaire);
+    }
+
+    sujets.add(Sujet(
+      record.id,
+      record.data['titre'],
+      record.data['texte'],
+      await getUserById(record.data['utilisateur'].toString()),
+      commentaires,
+      record.created,
+      record.updated,
+    ));
+  }
+
+  return sujets;
+}
+
+  Future<Sujet> getSujetById(String id) async {
+    final record = await pb.collection('sujet').getOne(id, expand: 'id');
+  
+    List<String> commentaireIds = List<String>.from(record.data['commentaires']);
+    List<Commentaire> commentaires = [];
+
+    for (var commentaireId in commentaireIds) {
+      Commentaire commentaire = await getCommentById(commentaireId);
+      commentaires.add(commentaire);
+    }
+
+    Sujet sujet = Sujet(
+      record.id,
+      record.data['titre'].toString(),
+      record.data['texte'].toString(),
+      await getUserById(record.data['utilisateur'].toString()),
+      commentaires,
+      record.created,
+      record.updated,
+    );
+
+    return sujet;
+  }
+
+Future<Commentaire> getCommentById(String id) async {
+  final record = await pb.collection('commentaire').getOne(id, expand: 'id');
+
+  final commentaire = Commentaire(
+    record.id,
+    record.data['texte'].toString(),
+    await getUserById(record.data['utilisateur'].toString()),
+    record.created,
+    record.updated,
+  );
+
+  return commentaire;
+}
+
   
 
 }

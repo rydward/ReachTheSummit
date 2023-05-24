@@ -6,7 +6,7 @@ class Sujet{
   String titre;
   String texte;
   Users utilisateur;
-  Commentaire commentaire;
+  List<Commentaire> commentaires;
   String created;
   String updated;
 
@@ -15,7 +15,7 @@ class Sujet{
     this.titre,
     this.texte,
     this.utilisateur,
-    this.commentaire,
+    this.commentaires,
     this.created,
     this.updated,
   );
