@@ -174,7 +174,6 @@ Future<List<Sujet>> getSubjects() async {
   );
 
   for (var record in records) {
-    print(record.id);
     try{
     sujets.add(Sujet(
       record.id,
@@ -232,6 +231,34 @@ Future<List<Commentaire>> getCommentsByIdSujet(String id) async {
   return commentaires;
 }
 
-  
+Future<dynamic> addComment(String texte, String sujet) async {
+  final body = <String, dynamic>{
+    "texte": texte,
+    "utilisateur": pb.authStore.model.id,
+    "sujet": sujet,
+  };
+
+  try {
+    final record = await pb.collection('commentaire').create(body: body);
+    return true;
+  } catch (e) {
+    return "erreur lors de l'ajout du commentaire";
+  }
+}
+
+Future<dynamic> addSujet(String titre, String texte) async{
+  final body = <String, dynamic>{
+    "titre": titre,
+    "texte": texte,
+    "utilisateur": pb.authStore.model.id,
+  };
+
+  try {
+    final record = await pb.collection('sujet').create(body: body);
+    return true;
+  } catch (e) {
+    return "erreur lors de l'ajout du sujet";
+  }
+}
 
 }

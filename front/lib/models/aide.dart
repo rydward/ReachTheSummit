@@ -8,7 +8,7 @@ class Aide{
   String titre;
   Niveau niveau;
   Users utilisateur;
-  Reponse reponses;
+  List<Reponse> reponses;
   String created;
   String updated;
 

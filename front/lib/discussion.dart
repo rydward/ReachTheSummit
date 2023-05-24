@@ -34,14 +34,15 @@ class DiscussionPage extends StatefulWidget {
 
 class _DiscussionPageState extends State<DiscussionPage> {
   Sujet? fetchedSujet;
+  TextEditingController _commentController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _fetchGuide();
+    _fetchSujet();
   }
 
-  Future<void> _fetchGuide() async {
+  Future<void> _fetchSujet() async {
     var sujet = await Database().getSujetById(widget.sujetId);
 
     setState(() {
@@ -49,8 +50,18 @@ class _DiscussionPageState extends State<DiscussionPage> {
     });
   }
 
-  void _handleGuideTap(Guide guide) {
-    print('Guide tapped: ${guide.titre}');
+  void _addComment() async {
+    String text = _commentController.text;
+
+    if (text.isEmpty) {
+      return;
+    }
+
+    await Database().addComment(text, widget.sujetId);
+
+    _commentController.clear();
+
+    await _fetchSujet();
   }
 
   @override
@@ -87,7 +98,6 @@ class _DiscussionPageState extends State<DiscussionPage> {
                     child: Text(
                       'Guides',
                       style: TextStyle(
-                        fontWeight: FontWeight.bold,
                         fontSize: 18,
                         color: Colors.white,
                       ),
@@ -104,6 +114,7 @@ class _DiscussionPageState extends State<DiscussionPage> {
                       'Forum',
                       style: TextStyle(
                         fontSize: 18,
+                        fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
@@ -211,6 +222,38 @@ class _DiscussionPageState extends State<DiscussionPage> {
                                 );
                               },
                             ),
+                          SizedBox(height: 20),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Ajouter une réponse',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                                SizedBox(height: 10),
+                                TextFormField(
+                                  controller: _commentController,
+                                  decoration: InputDecoration(
+                                    border: OutlineInputBorder(),
+                                    hintText: 'Entrez votre réponse',
+                                  ),
+                                  minLines: 3,
+                                  maxLines: 5,
+                                ),
+                                SizedBox(height: 10),
+                                ElevatedButton(
+                                  onPressed: _addComment,
+                                  child: Text('Envoyer'),
+                                ),
+                              ],
+                            ),
+                          ),
                         ],
                       ),
                     ),
