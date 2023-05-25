@@ -72,7 +72,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              'Inscription',
+              'Connexion',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -136,7 +136,7 @@ class _ConnexionPageState extends State<ConnexionPage> {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => InscriptionPage()));
                       },
                       child: Text(
-                        'J\'ai déjà un compte',
+                        'Je n\'ai pas de compte',
                         style: TextStyle(
                           color: Colors.black,
                       ),

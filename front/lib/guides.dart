@@ -29,6 +29,7 @@ class GuidesPage extends StatefulWidget {
 }
 
 class _GuidesPageState extends State<GuidesPage> {
+  
   List<Guide> guides = [];
 
   @override

@@ -3,8 +3,10 @@ import 'package:front/models/commentaire.dart';
 import 'package:front/models/guide.dart';
 import 'package:front/models/sujet.dart';
 import 'package:front/models/users.dart';
+import 'package:front/models/speedrun.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:collection/collection.dart';
+import 'package:front/models/categorie_speedrun.dart';
 
 class Database{
   static final Database _instance = Database._internal();
@@ -260,5 +262,66 @@ Future<dynamic> addSujet(String titre, String texte) async{
     return "erreur lors de l'ajout du sujet";
   }
 }
+
+Future<List<Speedrun>> getSpeedRuns() async {
+    List<Speedrun> speedruns = [];
+
+    final records = await pb.collection('speedrun').getFullList(
+      sort: '-created',
+    );
+
+    for (var record in records) {
+        speedruns.add(Speedrun(
+          record.id,
+          record.data['video'],
+          record.data['note'],
+          record.data['plateforme'],
+          record.data['version'],
+          await getUserById(record.data['createur'].toString()),
+          await getUserById(record.data['verified_by'].toString()),
+          record.data['is_verified'],
+          await getCategorieById(record.data['categorie'].toString()),
+          record.data['igt'],
+          record.created,
+          record.updated,
+        ));
+    }
+
+    return speedruns;
+  }
+
+Future<Speedrun> getSpeedRunById(String id) async {
+    final record = await pb.collection('speedrun').getOne(id, expand: 'id');
+    
+    final speedrun = Speedrun(
+      record.id,
+      record.data['video'],
+      record.data['note'],
+      record.data['plateforme'],
+      record.data['version'],
+      await getUserById(record.data['createur'].toString()),
+      await getUserById(record.data['verified_by'].toString()),
+      record.data['is_verified'],
+      await getCategorieById(record.data['categorie'].toString()),
+      record.data['igt'],
+      record.created,
+      record.updated,
+    );
+
+    return speedrun;
+  }
+
+  Future<CategorieSpeedrun> getCategorieById(String id) async {
+    final record = await pb.collection('categorieSpeedrun').getOne(id, expand: 'id');
+    
+    final categorieSpeedrun = CategorieSpeedrun(
+      record.id,
+      record.data['libelle'].toString(),
+      record.created,
+      record.updated,
+    );
+
+    return categorieSpeedrun;
+  }
 
 }
