@@ -2,25 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:front/db/db.dart';
 import 'package:front/models/speedrun.dart';
 import 'package:front/share/bottom_navigation_bar_widget.dart';
-void main() => runApp(const SpeedrunApp());
+void main() => runApp(SpeedrunApp());
 
 class SpeedrunApp extends StatelessWidget {
-  const SpeedrunApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Page d\'inscription',
+      title: 'Speedruns',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const SpeedrunPage(),
+      home:SpeedrunPage(),
     );
   }
 }
 
 class SpeedrunPage extends StatefulWidget {
-  const SpeedrunPage({super.key});
 
   @override
   _SpeedrunPageState createState() => _SpeedrunPageState();
@@ -122,7 +120,7 @@ class _SpeedrunPageState extends State<SpeedrunPage> {
                             ),
                           ),
                           title: Text(
-                            speedrun.note,
+                            speedrun.plateforme + ' - ' + speedrun.version + '\n' + speedrun.note,
                             style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

@@ -264,31 +264,37 @@ Future<dynamic> addSujet(String titre, String texte) async{
 }
 
 Future<List<Speedrun>> getSpeedRuns() async {
-    List<Speedrun> speedruns = [];
+  List<Speedrun> speedruns = [];
 
-    final records = await pb.collection('speedrun').getFullList(
-      sort: '-created',
-    );
+  final records = await pb.collection('speedrun').getFullList(
+    sort: '-created',
+  );
 
-    for (var record in records) {
-        speedruns.add(Speedrun(
-          record.id,
-          record.data['video'],
-          record.data['note'],
-          record.data['plateforme'],
-          record.data['version'],
-          await getUserById(record.data['createur'].toString()),
-          await getUserById(record.data['verified_by'].toString()),
-          record.data['is_verified'],
-          await getCategorieById(record.data['categorie'].toString()),
-          record.data['igt'],
-          record.created,
-          record.updated,
-        ));
-    }
+  for (var record in records) {
+    Users createur = await getUserById(record.data['createur'].toString());
+    Users verifiedBy = await getUserById(record.data['verified_by'].toString());
+    CategorieSpeedrun categorie = await getCategorieById(record.data['categorie'].toString());
 
-    return speedruns;
+      speedruns.add(Speedrun(
+      record.id,
+      record.data['video'],
+      record.data['note'],
+      record.data['plateforme'],
+      record.data['version'],
+      createur,
+      verifiedBy,
+      record.data['is_verified'],
+      categorie,
+      record.data['igt'],
+      record.created,
+      record.updated,
+    ));
+      
   }
+
+  return speedruns;
+}
+
 
 Future<Speedrun> getSpeedRunById(String id) async {
     final record = await pb.collection('speedrun').getOne(id, expand: 'id');
@@ -312,7 +318,7 @@ Future<Speedrun> getSpeedRunById(String id) async {
   }
 
   Future<CategorieSpeedrun> getCategorieById(String id) async {
-    final record = await pb.collection('categorieSpeedrun').getOne(id, expand: 'id');
+    final record = await pb.collection('categorie_speedrun').getOne(id, expand: 'id');
     
     final categorieSpeedrun = CategorieSpeedrun(
       record.id,

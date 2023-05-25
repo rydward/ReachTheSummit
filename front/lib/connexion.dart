@@ -9,7 +9,7 @@ class ConnexionApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Page d\'inscription',
+      title: 'Page de connexion',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
