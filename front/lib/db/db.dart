@@ -1,9 +1,13 @@
+import 'package:front/addSpeedrun.dart';
 import 'package:front/models/actualite.dart';
+import 'package:front/models/aide.dart';
 import 'package:front/models/commentaire.dart';
 import 'package:front/models/guide.dart';
+import 'package:front/models/niveau.dart';
 import 'package:front/models/sujet.dart';
 import 'package:front/models/users.dart';
 import 'package:front/models/speedrun.dart';
+import 'package:front/models/reponse.dart';
 import 'package:pocketbase/pocketbase.dart';
 import 'package:collection/collection.dart';
 import 'package:front/models/categorie_speedrun.dart';
@@ -329,5 +333,137 @@ Future<Speedrun> getSpeedRunById(String id) async {
 
     return categorieSpeedrun;
   }
+
+  Future<dynamic> AddSpeedrun(String link, String note, String plateforme, String version, String igt) async{
+  final body = <String, dynamic>{
+    "video": link,
+    "note": note,
+    "plateforme": plateforme,
+    "version": version,
+    "createur": pb.authStore.model.id,
+    "verified_by": null,
+    "is_verified": false,
+    "categorie": null, 
+    "igt": igt,
+  };
+
+  try {
+    final record = await pb.collection('speedrun').create(body: body);
+    return true;
+  } catch (e) {
+    return "erreur lors de l'ajout du sujet";
+  }
+}
+
+Future<List<Aide>> getAides() async {
+  List<Aide> aides = [];
+
+  final records = await pb.collection('aide').getFullList(
+    sort: '-created',
+  );
+
+  for (var record in records) {
+    try{
+    aides.add(Aide(
+      record.id,
+      record.data['type'],
+      record.data['titre'],
+      await getNiveauById(record.data['niveau'].toString()),
+      await getUserById(record.data['utilisateur'].toString()),
+      await getReponseByIdAide(record.id),
+      record.created,
+      record.updated,
+    ));
+    }catch(e){
+      print(e);
+    }
+  }
+
+  return aides;
+}
+
+  Future<dynamic> addAide(String type, String titre) async{
+  final body = <String, dynamic>{
+    "type": type,
+    "titre": titre,
+    "niveau": null,
+    "utilisateur": pb.authStore.model.id,
+  };
+
+  try {
+    final record = await pb.collection('aide').create(body: body);
+    return true;
+  } catch (e) {
+    return "erreur lors de l'ajout du sujet";
+  }
+}
+
+Future<Niveau> getNiveauById(String id) async {
+    final record = await pb.collection('users').getOne(id, expand: 'id');
+    
+    final niveau = Niveau(
+      record.id,
+      record.data['nom'].toString(),
+      record.created,
+      record.updated,
+    );
+
+    return niveau;
+  }
+
+  Future<List<Reponse>> getReponseByIdAide(String id) async {
+  final records = await pb.collection('reponse').getFullList(
+    filter: 'aide = "$id"',
+    sort: 'created',
+  );
+
+  List<Reponse> reponses = [];
+
+  for (var record in records) {
+    reponses.add(Reponse(
+      record.id,
+      record.data['texte'],
+      await getUserById(record.data['utilisateur'].toString()),
+      record.created,
+      record.updated,
+    ));
+  }
+
+  return reponses;
+}
+
+Future<Aide> getAideById(String id) async {
+    final record = await pb.collection('aide').getOne(id, expand: 'id');
+
+    List<Reponse> reponses = await getReponseByIdAide(id);
+
+    Aide sujet = Aide(
+      record.id,
+      record.data['type'],
+      record.data['titre'],
+      await getNiveauById(record.data['niveau'].toString()),
+      await getUserById(record.data['utilisateur'].toString()),
+      reponses,
+      record.created,
+      record.updated,
+    );
+
+    return sujet;
+  }
+
+  Future<dynamic> addReponse(String texte, String aide) async {
+  final body = <String, dynamic>{
+    "texte": texte,
+    "utilisateur": pb.authStore.model.id,
+    "aide": aide,
+  };
+
+  try {
+    final record = await pb.collection('reponse').create(body: body);
+    return true;
+  } catch (e) {
+    return "erreur lors de l'ajout du commentaire";
+  }
+}
 
 }

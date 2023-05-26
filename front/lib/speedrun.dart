@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/db/db.dart';
 import 'package:front/models/speedrun.dart';
+import 'package:front/AddSpeedrun.dart';
 import 'package:front/share/bottom_navigation_bar_widget.dart';
 void main() => runApp(SpeedrunApp());
 
@@ -87,7 +88,7 @@ class _SpeedrunPageState extends State<SpeedrunPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SpeedrunPage()),
+                        MaterialPageRoute(builder: (context) => AddSpeedrun()),
                       );
                     },
                     child: Text(
