@@ -252,6 +252,21 @@ Future<dynamic> addComment(String texte, String sujet) async {
   }
 }
 
+Future<dynamic> addActualite(String titre, String texte) async{
+  final body = <String, dynamic>{
+    "titre": titre,
+    "texte": texte,
+    "createur": pb.authStore.model.id,
+  };
+
+  try {
+    final record = await pb.collection('actualite').create(body: body);
+    return true;
+  } catch (e) {
+    return "erreur lors de l'ajout de l'actualité";
+  }
+}
+
 Future<dynamic> addSujet(String titre, String texte) async{
   final body = <String, dynamic>{
     "titre": titre,
@@ -267,11 +282,12 @@ Future<dynamic> addSujet(String titre, String texte) async{
   }
 }
 
-Future<List<Speedrun>> getSpeedRuns() async {
+Future<List<Speedrun>> getVerifiedSpeedRuns() async {
   List<Speedrun> speedruns = [];
 
   final records = await pb.collection('speedrun').getFullList(
-    sort: '-created',
+    sort: 'igt',
+    filter: 'is_verified = true',
   );
 
   for (var record in records) {
@@ -297,6 +313,63 @@ Future<List<Speedrun>> getSpeedRuns() async {
   }
 
   return speedruns;
+}
+
+Future<List<Speedrun>> getSpeedrunsToVerify() async{
+  List<Speedrun> speedruns = [];
+
+  final records = await pb.collection('speedrun').getFullList(
+    sort: 'igt',
+    filter: 'is_verified = false',
+  );
+
+  for (var record in records) {
+    Users createur = await getUserById(record.data['createur'].toString());
+    Users verifiedBy = await getUserById(record.data['verified_by'].toString());
+    CategorieSpeedrun categorie = await getCategorieById(record.data['categorie'].toString());
+
+
+      speedruns.add(Speedrun(
+      record.id,
+      record.data['video'],
+      record.data['note'],
+      record.data['plateforme'],
+      record.data['version'],
+      createur,
+      verifiedBy,
+      record.data['is_verified'],
+      categorie,
+      record.data['igt'],
+      record.created,
+      record.updated,
+    ));
+      
+  }
+
+  return speedruns;
+}
+
+Future<dynamic> verifySpeedrun(String id, bool isAccepted) async{
+  if(isAccepted){
+    final body = <String, dynamic>{
+      "is_verified": true,
+      "verified_by": pb.authStore.model.id,
+    };
+
+    try {
+      final record = await pb.collection('speedrun').update(id, body: body);
+      return true;
+    } catch (e) {
+      return "erreur lors de la vérification de la speedrun";
+    }
+  }else{
+    try {
+      final record = await pb.collection('speedrun').delete(id);
+      return true;
+    } catch (e) {
+      return "erreur lors de la vérification de la speedrun";
+    }
+  }
 }
 
 
@@ -334,7 +407,7 @@ Future<Speedrun> getSpeedRunById(String id) async {
     return categorieSpeedrun;
   }
 
-  Future<dynamic> AddSpeedrun(String link, String note, String plateforme, String version, String igt) async{
+  Future<dynamic> addSpeedrun(String link, String note, String plateforme, String version, String igt) async{
   final body = <String, dynamic>{
     "video": link,
     "note": note,
@@ -382,11 +455,11 @@ Future<List<Aide>> getAides() async {
   return aides;
 }
 
-  Future<dynamic> addAide(String type, String titre) async{
+  Future<dynamic> addAide(String type, String titre, String niveau) async{
   final body = <String, dynamic>{
     "type": type,
     "titre": titre,
-    "niveau": null,
+    "niveau": niveau,
     "utilisateur": pb.authStore.model.id,
   };
 
@@ -399,7 +472,7 @@ Future<List<Aide>> getAides() async {
 }
 
 Future<Niveau> getNiveauById(String id) async {
-    final record = await pb.collection('users').getOne(id, expand: 'id');
+    final record = await pb.collection('niveau').getOne(id, expand: 'id');
     
     final niveau = Niveau(
       record.id,
@@ -465,5 +538,46 @@ Future<Aide> getAideById(String id) async {
     return "erreur lors de l'ajout du commentaire";
   }
 }
+
+  Future<List<Niveau>> getNiveaux() async {
+    List<Niveau> niveaux = [];
+
+    final records = await pb.collection('niveau').getFullList(
+      sort: 'created',
+    );
+
+    for (var record in records) {
+        niveaux.add(Niveau(
+          record.id,
+          record.data['nom'],
+          record.created,
+          record.updated,
+        ));
+    }
+
+    return niveaux;
+  }
+
+  Future<dynamic> addLivesplit(int temps_total, int prologue, int forsaken_city, int old_site, int celestial_resort, int golden_ridge, int mirror_temple, int reflection, int summit) async{
+  final body = <String, dynamic>{
+    "temps_total": temps_total,
+    "prologue": prologue,
+    "forsaken_city": forsaken_city,
+    "old_site": old_site,
+    "celestial_resort": celestial_resort,
+    "golden_ridge": golden_ridge,
+    "mirror_temple": mirror_temple,
+    "reflection": reflection,
+    "the_summit": summit,
+    "user": pb.authStore.model.id,
+  };
+
+  try {
+    final record = await pb.collection('livesplit').create(body: body);
+    return true;
+  } catch (e) {
+    return "erreur lors de l'ajout du sujet";
+  }
+  }
 
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/db/db.dart';
 import 'package:front/models/actualite.dart';
+import 'package:front/models/users.dart';
 import 'package:front/share/bottom_navigation_bar_widget.dart';
 import 'package:intl/intl.dart';
 
@@ -26,11 +27,15 @@ class AccueilPage extends StatefulWidget {
 
 class _AccueilPageState extends State<AccueilPage> {
   List<Actualite> actualites = [];
+  Users? user;
+  TextEditingController _titleController = TextEditingController();
+  TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
     _fetchActualites();
+    _getConnectedUser();
   }
 
   Future<void> _fetchActualites() async {
@@ -39,6 +44,30 @@ class _AccueilPageState extends State<AccueilPage> {
     setState(() {
       actualites = fetchedActualites;
     });
+  }
+
+  Future<void> _getConnectedUser() async {
+    user = await Database().getConnectedUser();
+
+    setState(() {
+      user = user;
+    });
+  }
+
+  void _addActualite() async {
+    String title = _titleController.text;
+    String text = _textController.text;
+
+    if (title.isEmpty || text.isEmpty) {
+      return;
+    }
+
+    await Database().addActualite(title, text);
+
+    _titleController.clear();
+    _textController.clear();
+
+    await _fetchActualites();
   }
 
   @override
@@ -58,9 +87,56 @@ class _AccueilPageState extends State<AccueilPage> {
           ),
         ),
         child: ListView.builder(
-          itemCount: actualites.length,
+          itemCount: actualites.length + (user?.role == 'admin' ? 1 : 0),
           itemBuilder: (BuildContext context, int index) {
-            var actualite = actualites[index];
+            if (index == 0 && user?.role == 'admin') {
+              return Padding(
+                padding: EdgeInsets.all(20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Ajouter une actualité',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _titleController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Titre de l\'actualité',
+                        fillColor: Colors.white,  // Set the background color to white
+                        filled: true,  // Enable filling the background color
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                    TextFormField(
+                      controller: _textController,
+                      decoration: InputDecoration(
+                        border: OutlineInputBorder(),
+                        hintText: 'Texte de l\'actualité',
+                        fillColor: Colors.white,  // Set the background color to white
+                        filled: true,  // Enable filling the background color
+                      ),
+                      minLines: 3,
+                      maxLines: 5,
+                    ),
+                    SizedBox(height: 10),
+                    ElevatedButton(
+                      onPressed: _addActualite,
+                      child: Text('Ajouter'),
+                    ),
+                    SizedBox(height: 20),
+                  ],
+                ),
+              );
+            }
+
+            var actualite = actualites[index - (user?.role == 'admin' ? 1 : 0)];
 
             return Card(
               margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),

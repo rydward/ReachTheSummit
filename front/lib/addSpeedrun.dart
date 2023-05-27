@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:front/db/db.dart';
 import 'package:front/discussion.dart';
+import 'package:front/livesplit.dart';
 import 'package:front/models/actualite.dart';
 import 'package:front/models/sujet.dart';
 import 'package:front/share/bottom_navigation_bar_widget.dart';
@@ -57,7 +58,7 @@ class _AddSpeedrunPageState extends State<AddSpeedrunPage> {
       return;
     }
 
-    await Database().AddSpeedrun(link, note, plateforme, version, igt);
+    await Database().addSpeedrun(link, note, plateforme, version, igt);
 
     _linkController.clear();
     _noteController.clear();
@@ -95,7 +96,7 @@ class _AddSpeedrunPageState extends State<AddSpeedrunPage> {
                     onPressed: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => SpeedrunApp()),
+                        MaterialPageRoute(builder: (context) => SpeedrunPage()),
                       );
                     },
                     child: Text(
@@ -111,9 +112,24 @@ class _AddSpeedrunPageState extends State<AddSpeedrunPage> {
                       // Rien à faire, on est déjà sur la page
                     },
                     child: Text(
-                      '+ Speedrun',
+                      'Ajouter une run',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => LivesplitPage()),
+                      );
+                    },
+                    child: Text(
+                      'Livesplit',
+                      style: TextStyle(
                         fontSize: 18,
                         color: Colors.white,
                       ),

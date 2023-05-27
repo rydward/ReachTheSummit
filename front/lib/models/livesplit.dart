@@ -1,3 +1,5 @@
+import 'package:front/models/users.dart';
+
 class Livesplit{
   String id;
   int temps_total;
@@ -9,6 +11,7 @@ class Livesplit{
   int mirror_temple;
   int reflection;
   int the_summit;
+  Users user;
   String created;
   String updated;
 
@@ -23,6 +26,7 @@ class Livesplit{
     this.mirror_temple,
     this.reflection,
     this.the_summit,
+    this.user,
     this.created,
     this.updated,
   );

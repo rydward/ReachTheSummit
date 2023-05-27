@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:front/db/db.dart';
 import 'package:front/models/actualite.dart';
 import 'package:front/discussionAide.dart';
+import 'package:front/models/niveau.dart';
 import 'package:front/share/bottom_navigation_bar_widget.dart';
 import 'package:intl/intl.dart';
 import 'package:front/models/aide.dart';
@@ -31,6 +32,8 @@ class AidePage extends StatefulWidget {
 
 class _AidePageState extends State<AidePage> {
   List<Aide> aides = [];
+  List<Niveau> niveaux = [];
+  Niveau? selectedNiveau;
   TextEditingController _titleController = TextEditingController();
   TextEditingController _textController = TextEditingController();
 
@@ -38,6 +41,7 @@ class _AidePageState extends State<AidePage> {
   void initState() {
     super.initState();
     _fetchAides();
+    _fetchNiveaux();
   }
 
   Future<void> _fetchAides() async {
@@ -45,6 +49,14 @@ class _AidePageState extends State<AidePage> {
 
     setState(() {
       aides = fetchedAides;
+    });
+  }
+
+  Future<void> _fetchNiveaux() async {
+    var fetchedNiveaux = await Database().getNiveaux();
+
+    setState(() {
+      niveaux = fetchedNiveaux;
     });
   }
 
@@ -63,10 +75,15 @@ class _AidePageState extends State<AidePage> {
       return;
     }
 
-    await Database().addAide(title, text);
+    if (selectedNiveau == null) {
+      return;
+    }
+
+    await Database().addAide(title, text, selectedNiveau!.id);
 
     _titleController.clear();
     _textController.clear();
+    selectedNiveau = null;
 
     await _fetchAides();
   }
@@ -112,7 +129,10 @@ class _AidePageState extends State<AidePage> {
                   ),
                   TextButton(
                     onPressed: () {
-                      // Rien à faire, on est déjà sur la page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForumPage()),
+                      );
                     },
                     child: Text(
                       'Forum',
@@ -159,13 +179,34 @@ class _AidePageState extends State<AidePage> {
                             ),
                           ),
                           SizedBox(height: 10),
+                          DropdownButtonFormField<Niveau>(
+                            value: selectedNiveau,
+                            onChanged: (Niveau? newValue) {
+                              setState(() {
+                                selectedNiveau = newValue;
+                              });
+                            },
+                            items: niveaux.map<DropdownMenuItem<Niveau>>((Niveau niveau) {
+                              return DropdownMenuItem<Niveau>(
+                                value: niveau,
+                                child: Text(niveau.nom),
+                              );
+                            }).toList(),
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(),
+                              filled: true,
+                              fillColor: Colors.white,
+                              hintText: 'Choisir le niveau', // Placeholder text
+                            ),
+                          ),
+                          SizedBox(height: 10),
                           TextFormField(
                             controller: _titleController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              hintText: 'Titre du sujet',
-                              fillColor: Colors.white,  // Set the background color to white
-                              filled: true,  // Enable filling the background color
+                              hintText: "Titre de l'aide",
+                              fillColor: Colors.white,
+                              filled: true,
                             ),
                           ),
                           SizedBox(height: 10),
@@ -173,9 +214,9 @@ class _AidePageState extends State<AidePage> {
                             controller: _textController,
                             decoration: InputDecoration(
                               border: OutlineInputBorder(),
-                              hintText: 'Texte du sujet',
-                              fillColor: Colors.white,  // Set the background color to white
-                              filled: true,  // Enable filling the background color
+                              hintText: "Texte de l'aide",
+                              fillColor: Colors.white,
+                              filled: true,
                             ),
                             minLines: 3,
                             maxLines: 5,
@@ -197,7 +238,7 @@ class _AidePageState extends State<AidePage> {
                             color: Colors.white,
                             child: ListTile(
                               leading: CircleAvatar(
-                                radius: 20, // Reduce the size of the avatar
+                                radius: 20,
                                 backgroundImage: NetworkImage(
                                   aide.utilisateur.avatar.isEmpty
                                       ? 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
@@ -218,6 +259,13 @@ class _AidePageState extends State<AidePage> {
                                   SizedBox(height: 4),
                                   Text(
                                     'Publié le: ${aide.created}',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  Text(
+                                    'Niveau: ${aide.niveau.nom}',
                                     style: TextStyle(
                                       fontSize: 12,
                                       color: Colors.black,
