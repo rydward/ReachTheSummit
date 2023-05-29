@@ -558,6 +558,47 @@ Future<Aide> getAideById(String id) async {
     return niveaux;
   }
 
+  Future<int> getNbSpeedruns(String id) async {
+    final records = await pb.collection('speedrun').getFullList(
+      filter: 'createur = "$id"',
+    );
+    print(records.length);
+
+    return records.length;
+  }
+
+  Future<int> getNbSujets(String id) async {
+    final records = await pb.collection('sujet').getFullList(
+      filter: 'utilisateur = "$id"',
+    );
+
+    return records.length;
+  }
+
+  Future<int> getNbCommentaires(String id) async {
+    final records = await pb.collection('commentaire').getFullList(
+      filter: 'utilisateur = "$id"',
+    );
+
+    return records.length;
+  }
+
+  Future<int> getNbAides(String id) async {
+    final records = await pb.collection('aide').getFullList(
+      filter: 'utilisateur = "$id"',
+    );
+
+    return records.length;
+  }
+
+  Future<int> getNbReponses(String id) async {
+    final records = await pb.collection('reponse').getFullList(
+      filter: 'utilisateur = "$id"',
+    );
+
+    return records.length;
+  }
+
   Future<dynamic> addLivesplit(int temps_total, int prologue, int forsaken_city, int old_site, int celestial_resort, int golden_ridge, int mirror_temple, int reflection, int summit) async{
   final body = <String, dynamic>{
     "temps_total": temps_total,

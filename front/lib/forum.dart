@@ -202,7 +202,7 @@ class _ForumPageState extends State<ForumPage> {
                                 backgroundImage: NetworkImage(
                                   sujet.utilisateur.avatar.isEmpty
                                       ? 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
-                                      : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/kqtl5vuixxmfxqo/${sujet.utilisateur.avatar}',
+                                      : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/${sujet.utilisateur.id}/${sujet.utilisateur.avatar}',
                                 ),
                               ),
                               title: Text(

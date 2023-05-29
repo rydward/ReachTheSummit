@@ -147,7 +147,7 @@ class _AccueilPageState extends State<AccueilPage> {
                   backgroundImage: NetworkImage(
                     actualite.createur.avatar.isEmpty
                         ? 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
-                        : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/kqtl5vuixxmfxqo/${actualite.createur.avatar}',
+                        : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/${actualite.createur.id}/${actualite.createur.avatar}',
                   ),
                 ),
                 title: Text(

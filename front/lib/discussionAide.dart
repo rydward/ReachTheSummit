@@ -153,7 +153,7 @@ class _DiscussionPageState extends State<DiscussionAidePage> {
                               backgroundImage: NetworkImage(
                                 fetchedAide!.utilisateur.avatar.isEmpty
                                     ? 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
-                                    : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/kqtl5vuixxmfxqo/${fetchedAide!.utilisateur.avatar}',
+                                    : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/${fetchedAide!.utilisateur.id}/${fetchedAide!.utilisateur.avatar}',
                               ),
                             ),
                             title: Text(
@@ -202,7 +202,7 @@ class _DiscussionPageState extends State<DiscussionAidePage> {
                                     backgroundImage: NetworkImage(
                                       reponse.utilisateur.avatar.isEmpty
                                           ? 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
-                                          : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/kqtl5vuixxmfxqo/${reponse.utilisateur.avatar}',
+                                          : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/${fetchedAide!.utilisateur.id}/${reponse.utilisateur.avatar}',
                                     ),
                                   ),
                                   title: Text(

@@ -163,7 +163,7 @@ class _SpeedrunPageState extends State<SpeedrunPage> {
                                           backgroundImage: NetworkImage(
                                             speedrun.createur.avatar.isEmpty
                                                 ? 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
-                                                : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/kqtl5vuixxmfxqo/${speedrun.createur.avatar}',
+                                                : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/${speedrun.createur.id}/${speedrun.createur.avatar}',
                                           ),
                                         ),
                                       ),
@@ -233,7 +233,7 @@ class _SpeedrunPageState extends State<SpeedrunPage> {
                                           backgroundImage: NetworkImage(
                                             speedrun.createur.avatar.isEmpty
                                                 ? 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
-                                                : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/kqtl5vuixxmfxqo/${speedrun.createur.avatar}',
+                                                : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/${speedrun.createur.id}/${speedrun.createur.avatar}',
                                           ),
                                         ),
                                       ),

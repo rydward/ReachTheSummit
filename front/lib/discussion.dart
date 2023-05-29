@@ -153,7 +153,7 @@ class _DiscussionPageState extends State<DiscussionPage> {
                               backgroundImage: NetworkImage(
                                 fetchedSujet!.utilisateur.avatar.isEmpty
                                     ? 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
-                                    : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/kqtl5vuixxmfxqo/${fetchedSujet!.utilisateur.avatar}',
+                                    : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/${fetchedSujet!.utilisateur.id}/${fetchedSujet!.utilisateur.avatar}',
                               ),
                             ),
                             title: Text(
@@ -202,7 +202,7 @@ class _DiscussionPageState extends State<DiscussionPage> {
                                     backgroundImage: NetworkImage(
                                       commentaire.utilisateur.avatar.isEmpty
                                           ? 'https://cdn-icons-png.flaticon.com/512/6386/6386976.png'
-                                          : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/kqtl5vuixxmfxqo/${commentaire.utilisateur.avatar}',
+                                          : 'http://127.0.0.1:8090/api/files/_pb_users_auth_/${fetchedSujet!.utilisateur.id}/${commentaire.utilisateur.avatar}',
                                     ),
                                   ),
                                   title: Text(
