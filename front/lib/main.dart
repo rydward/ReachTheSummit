@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:front/connexion.dart';
+import 'package:front/home.dart';
 void main() {
-  runApp(ConnexionApp());
+  runApp(HomeApp());
 }
 

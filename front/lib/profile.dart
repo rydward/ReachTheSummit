@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:front/home.dart';
 import 'package:front/models/users.dart';
 import 'package:front/db/db.dart';
 import 'package:front/share/bottom_navigation_bar_widget.dart';
@@ -34,6 +35,11 @@ class _ProfilePageState extends State<ProfilePage> {
     _getNbSujet();
     _getNbCommentaire();
     _getNbAide();
+  }
+
+  void _disconnect() async {
+    Database().disconnect();
+    Navigator.push(context, MaterialPageRoute(builder: (context) => HomeApp()));
   }
 
   Future<void> _getNbSpeedruns() async {
@@ -167,6 +173,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 fontSize: 16,
                 color: Colors.white,
               ),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                _disconnect();
+              },
+              child: Text('Se déconnecter'),
             ),
           ],
         ),

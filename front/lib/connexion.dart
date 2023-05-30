@@ -29,15 +29,6 @@ class _ConnexionPageState extends State<ConnexionPage> {
   String _password = '';
   String error = '';
 
-  void _disconnect() async {
-    Database().disconnect();
-  }
-
-  void _checkConnexion() async {
-    var isConnected = Database().checkConnexion();
-    print(isConnected);
-  }
-
   void _connectUser() async {
     var result = await Database().connectUser(_pseudo, _password);
     if (result == true) {
@@ -149,29 +140,6 @@ class _ConnexionPageState extends State<ConnexionPage> {
                         }
                       },
                       child: Text('Se connecter'),
-                    ),
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => InscriptionPage()));
-                      },
-                      child: Text(
-                        'J\'ai oublié mon mot de passe',
-                        style: TextStyle(
-                          color: Colors.black,
-                      ),
-                    ),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _checkConnexion();
-                      },
-                      child: Text('Check connexion'),
-                    ),
-                    ElevatedButton(
-                      onPressed: () {
-                        _disconnect();
-                      },
-                      child: Text('Disconnect'),
                     ),
                   ],
                 ),
